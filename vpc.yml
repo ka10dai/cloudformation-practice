@@ -26,7 +26,27 @@ Resources:
       CidrBlock: 10.0.0.0/20
       Tags:
       - Key: Name
-        Value: public-subnet-1a
+        Value: public-subnet-01a
+
+  Subnet02a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.16.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-02a
+
+  Subnet03a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.32.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-03a
 
 #=============================================
 # インターネットゲートウェイ
@@ -53,13 +73,13 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT
+        Value: sampleRT01
 
   RouteTableAssociation01a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref RouteTable01
       SubnetId: !Ref Subnet01a
+      RouteTableId: !Ref RouteTable01
 
   Route01:
     Type: AWS::EC2::Route
@@ -67,3 +87,31 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTable01
+
+  RouteTable02:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: sampleRT02
+
+  RouteTableAssociation02a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet02a
+      RouteTableId: !Ref RouteTable02
+
+  RouteTable03:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: sampleRT03
+
+  RouteTableAssociation03a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet03a
+      RouteTableId: !Ref RouteTable03
