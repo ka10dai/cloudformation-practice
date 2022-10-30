@@ -14,3 +14,16 @@ Resources:
       Tags:
       - Key: Name
         Value: sampleVPC
+
+#=============================================
+# サブネット
+#=============================================
+  Subnet01a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.0.0/20
+      Tags:
+      - Key: Name
+        Value: public-subnet-1a
