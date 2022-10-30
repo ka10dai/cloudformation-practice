@@ -27,3 +27,19 @@ Resources:
       Tags:
       - Key: Name
         Value: public-subnet-1a
+
+#=============================================
+# インターネットゲートウェイ
+#=============================================
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: sampleIGW
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
