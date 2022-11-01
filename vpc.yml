@@ -16,7 +16,7 @@ Resources:
         Value: sampleVPC
 
 #=============================================
-# サブネット
+# サブネット AZ-a
 #=============================================
   Subnet01a:
     Type: AWS::EC2::Subnet
@@ -49,6 +49,39 @@ Resources:
         Value: private-subnet-03a
 
 #=============================================
+# サブネット AZ-c
+#=============================================
+  Subnet01c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.48.0/20
+      Tags:
+      - Key: Name
+        Value: public-subnet-01c
+
+  Subnet02c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.64.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-02c
+
+  Subnet03c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.80.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-03c
+
+#=============================================
 # インターネットゲートウェイ
 #=============================================
   InternetGateway:
@@ -65,7 +98,7 @@ Resources:
       InternetGatewayId: !Ref InternetGateway
 
 #=============================================
-# NATゲートウェイの作成
+# NATゲートウェイ AZ-a
 #=============================================
   NatGWa:
     Type: AWS::EC2::NatGateway
@@ -74,7 +107,7 @@ Resources:
       AllocationId: !GetAtt EIPNatGWa.AllocationId
       Tags:
       - Key: Name
-        Value: sampleNatGW
+        Value: sampleNatGWa
 
   EIPNatGWa:
     Type: AWS::EC2::EIP
@@ -85,8 +118,30 @@ Resources:
         Value: sampleEIPNatGWa
 
 #=============================================
+# NATゲートウェイ AZ-c
+#=============================================
+  NatGWc:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: !Ref Subnet01c
+      AllocationId: !GetAtt EIPNatGWc.AllocationId
+      Tags:
+      - Key: Name
+        Value: sampleNatGWc
+
+  EIPNatGWc:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+      - Key: Name
+        Value: sampleEIPNatGWc
+
+#=============================================
 # ルートテーブル
 #=============================================
+# パブリックサブネット用
+# 各AZ共通のルートテーブル
   RouteTable01:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -95,12 +150,6 @@ Resources:
       - Key: Name
         Value: sampleRT01
 
-  RouteTableAssociation01a:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref Subnet01a
-      RouteTableId: !Ref RouteTable01
-
   Route01:
     Type: AWS::EC2::Route
     Properties:
@@ -108,27 +157,65 @@ Resources:
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTable01
 
-  RouteTable02:
+  RouteTableAssociation01a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet01a
+      RouteTableId: !Ref RouteTable01
+
+  RouteTableAssociation01c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet01c
+      RouteTableId: !Ref RouteTable01
+
+# プライベートサブネット用
+# AZ-a
+  RouteTable02a:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT02
-
-  RouteTableAssociation02a:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref Subnet02a
-      RouteTableId: !Ref RouteTable02
+        Value: sampleRT02a
 
   Route02a:
     Type: AWS::EC2::Route
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NatGWa
-      RouteTableId: !Ref RouteTable02
+      RouteTableId: !Ref RouteTable02a
 
+  RouteTableAssociation02a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet02a
+      RouteTableId: !Ref RouteTable02a
+
+# AZ-c
+  RouteTable02c:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: sampleRT02c
+
+  Route02c:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGWc
+      RouteTableId: !Ref RouteTable02c
+
+  RouteTableAssociation02c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet02c
+      RouteTableId: !Ref RouteTable02c
+
+# プライベートサブネット用
+# 各AZ共通のルートテーブル
   RouteTable03:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -141,4 +228,10 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref Subnet03a
+      RouteTableId: !Ref RouteTable03
+
+  RouteTableAssociation03c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet03c
       RouteTableId: !Ref RouteTable03
