@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: VPC
+Description: Let's build a VPC environment using AWS CloudFormation!
 
 Resources:
 #=============================================
@@ -201,7 +201,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT01
+        Value: RouteTable01
 
   Route01:
     Type: AWS::EC2::Route
@@ -213,20 +213,20 @@ Resources:
   RouteTableAssociation01a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet01a
       RouteTableId: !Ref RouteTable01
+      SubnetId: !Ref Subnet01a
 
   RouteTableAssociation01c:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet01c
       RouteTableId: !Ref RouteTable01
+      SubnetId: !Ref Subnet01c
 
   RouteTableAssociation01d:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet01d
       RouteTableId: !Ref RouteTable01
+      SubnetId: !Ref Subnet01d
 
 # プライベートサブネット用
 # AZ-a
@@ -236,7 +236,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT02a
+        Value: RouteTable02a
 
   Route02a:
     Type: AWS::EC2::Route
@@ -248,8 +248,8 @@ Resources:
   RouteTableAssociation02a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet02a
       RouteTableId: !Ref RouteTable02a
+      SubnetId: !Ref Subnet02a
 
 # AZ-c
   RouteTable02c:
@@ -258,7 +258,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT02c
+        Value: RouteTable02c
 
   Route02c:
     Type: AWS::EC2::Route
@@ -270,8 +270,8 @@ Resources:
   RouteTableAssociation02c:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet02c
       RouteTableId: !Ref RouteTable02c
+      SubnetId: !Ref Subnet02c
 
 # AZ-d
   RouteTable02d:
@@ -280,7 +280,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT02d
+        Value: RouteTable02d
 
   Route02d:
     Type: AWS::EC2::Route
@@ -292,8 +292,8 @@ Resources:
   RouteTableAssociation02d:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet02d
       RouteTableId: !Ref RouteTable02d
+      SubnetId: !Ref Subnet02d
 
 # プライベートサブネット用
 # 各AZ共通のルートテーブル
@@ -303,22 +303,22 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: sampleRT03
+        Value: RouteTable03
 
   RouteTableAssociation03a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet03a
       RouteTableId: !Ref RouteTable03
+      SubnetId: !Ref Subnet03a
 
   RouteTableAssociation03c:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet03c
       RouteTableId: !Ref RouteTable03
+      SubnetId: !Ref Subnet03c
 
   RouteTableAssociation03d:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref Subnet03d
       RouteTableId: !Ref RouteTable03
+      SubnetId: !Ref Subnet03d
