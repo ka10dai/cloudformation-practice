@@ -1,6 +1,21 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Let's build a VPC environment using AWS CloudFormation!
 
+Parameters:
+  Project:
+    Type: String
+    Default: sampleVPC
+    Description: Enter the project name.
+
+  Env:
+    Type: String
+    Default: development
+    AllowedValues:
+      - production
+      - development
+      - staging
+    Description: Enter the environment.
+
 Resources:
 #=============================================
 # VPC
@@ -13,7 +28,8 @@ Resources:
       EnableDnsHostnames: true
       Tags:
       - Key: Name
-        Value: sampleVPC
+        Value: !Join ["-", [!Ref Project, !Ref Env]]
+
 
 #=============================================
 # サブネット AZ-a
@@ -122,7 +138,7 @@ Resources:
     Properties:
       Tags:
       - Key: Name
-        Value: sampleIGW
+        Value: !Join ["-", [!Ref Project, !Ref Env]]
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -140,7 +156,7 @@ Resources:
       AllocationId: !GetAtt EIPNatGWa.AllocationId
       Tags:
       - Key: Name
-        Value: sampleNatGWa
+        Value: !Join ["-", [!Ref Project, !Ref Env, a]]
 
   EIPNatGWa:
     Type: AWS::EC2::EIP
@@ -160,7 +176,7 @@ Resources:
       AllocationId: !GetAtt EIPNatGWc.AllocationId
       Tags:
       - Key: Name
-        Value: sampleNatGWc
+        Value: !Join ["-", [!Ref Project, !Ref Env, c]]
 
   EIPNatGWc:
     Type: AWS::EC2::EIP
@@ -180,7 +196,7 @@ Resources:
       AllocationId: !GetAtt EIPNatGWd.AllocationId
       Tags:
       - Key: Name
-        Value: sampleNatGWd
+        Value: !Join ["-", [!Ref Project, !Ref Env, d]]
 
   EIPNatGWd:
     Type: AWS::EC2::EIP
