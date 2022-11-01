@@ -49,7 +49,6 @@ Resources:
       - Key: Name
         Value: !Join ["-", [!Ref Project, !Ref Env]]
 
-
 #=============================================
 # サブネット AZ-a
 #=============================================
@@ -240,6 +239,7 @@ Resources:
 
   Route01:
     Type: AWS::EC2::Route
+    DependsOn: AttachGateway
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
