@@ -82,6 +82,39 @@ Resources:
         Value: private-subnet-03c
 
 #=============================================
+# サブネット AZ-d
+#=============================================
+  Subnet01d:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1d
+      CidrBlock: 10.0.96.0/20
+      Tags:
+      - Key: Name
+        Value: public-subnet-01d
+
+  Subnet02d:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1d
+      CidrBlock: 10.0.112.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-02d
+
+  Subnet03d:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1d
+      CidrBlock: 10.0.128.0/20
+      Tags:
+      - Key: Name
+        Value: private-subnet-03d
+
+#=============================================
 # インターネットゲートウェイ
 #=============================================
   InternetGateway:
@@ -138,6 +171,26 @@ Resources:
         Value: sampleEIPNatGWc
 
 #=============================================
+# NATゲートウェイ AZ-d
+#=============================================f
+  NatGWd:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: !Ref Subnet01d
+      AllocationId: !GetAtt EIPNatGWd.AllocationId
+      Tags:
+      - Key: Name
+        Value: sampleNatGWd
+
+  EIPNatGWd:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+      - Key: Name
+        Value: sampleEIPNatGWd
+
+#=============================================
 # ルートテーブル
 #=============================================
 # パブリックサブネット用
@@ -167,6 +220,12 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref Subnet01c
+      RouteTableId: !Ref RouteTable01
+
+  RouteTableAssociation01d:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet01d
       RouteTableId: !Ref RouteTable01
 
 # プライベートサブネット用
@@ -214,6 +273,28 @@ Resources:
       SubnetId: !Ref Subnet02c
       RouteTableId: !Ref RouteTable02c
 
+# AZ-d
+  RouteTable02d:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: sampleRT02d
+
+  Route02d:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGWd
+      RouteTableId: !Ref RouteTable02d
+
+  RouteTableAssociation02d:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet02d
+      RouteTableId: !Ref RouteTable02d
+
 # プライベートサブネット用
 # 各AZ共通のルートテーブル
   RouteTable03:
@@ -234,4 +315,10 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref Subnet03c
+      RouteTableId: !Ref RouteTable03
+
+  RouteTableAssociation03d:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet03d
       RouteTableId: !Ref RouteTable03
